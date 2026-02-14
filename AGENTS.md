@@ -1,4 +1,4 @@
-# Repository Guidelines
+﻿# Repository Guidelines
 
 ## Project Structure & Module Organization
 This repository is currently in an initial state. Use the structure below as the default layout for new contributions:

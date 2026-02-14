@@ -1,0 +1,312 @@
+﻿openapi: 3.0.3
+info:
+  title: Specimen Storage API (Next.js Routes)
+  version: 1.1.0
+  description: Next.js App Router API contract backed by Supabase PostgreSQL.
+servers:
+  - url: /api
+paths:
+  /uploads/master:
+    post:
+      summary: Upload master list and publish a new ingestion version
+      operationId: uploadMasterList
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                notes:
+                  type: string
+      responses:
+        '201':
+          description: Upload accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadResult'
+        '400':
+          description: Parse or validation error
+  /uploads/rack:
+    post:
+      summary: Upload rack list and publish a new ingestion version
+      operationId: uploadRackList
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Upload accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadResult'
+        '409':
+          description: Active BOX-ID/LABEL-N uniqueness conflict
+  /versions/{versionNo}/diff/{previousVersionNo}:
+    get:
+      summary: Compare two ingestion versions
+      operationId: getVersionDiff
+      parameters:
+        - in: path
+          name: versionNo
+          required: true
+          schema: { type: integer }
+        - in: path
+          name: previousVersionNo
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Version diff
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionDiff'
+  /samples/search:
+    get:
+      summary: Label-first sample search
+      operationId: searchSamples
+      parameters:
+        - in: query
+          name: label
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SampleSearchResponse'
+  /samples/{sampleId}/history:
+    get:
+      summary: Get sample timeline
+      operationId: getSampleHistory
+      parameters:
+        - in: path
+          name: sampleId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Event history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+  /cabinets/visualization:
+    get:
+      summary: Get 7-cabinet 5x7 occupancy view
+      operationId: getCabinetVisualization
+      responses:
+        '200':
+          description: Cabinet visualization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CabinetVisualization'
+  /rack-mappings:
+    get:
+      summary: List BOX-ID to LABEL-N mappings
+      operationId: listRackMappings
+      responses:
+        '200':
+          description: Mapping list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RackMapping'
+    patch:
+      summary: Update one BOX-ID (LABEL-N) mapping
+      operationId: updateRackMapping
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [boxId, labelN]
+              properties:
+                boxId: { type: string }
+                labelN: { type: string }
+      responses:
+        '200':
+          description: Mapping updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RackMapping'
+        '409':
+          description: Uniqueness conflict
+  /disposal-alerts:
+    get:
+      summary: List expiry-based disposal alerts
+      operationId: listDisposalAlerts
+      parameters:
+        - in: query
+          name: status
+          required: false
+          schema: { type: string, enum: [pending, reviewed, completed] }
+      responses:
+        '200':
+          description: Alert list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DisposalAlert'
+  /disposal-alerts/{alertId}/status:
+    patch:
+      summary: Update disposal alert status
+      operationId: updateDisposalAlertStatus
+      parameters:
+        - in: path
+          name: alertId
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  type: string
+                  enum: [pending, reviewed, completed]
+      responses:
+        '200':
+          description: Status updated
+  /chatbot/query:
+    post:
+      summary: Execute bounded inventory chatbot query
+      operationId: chatbotQuery
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [question]
+              properties:
+                question:
+                  type: string
+      responses:
+        '200':
+          description: Chatbot result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatbotResponse'
+        '422':
+          description: Unsupported intent
+components:
+  schemas:
+    UploadResult:
+      type: object
+      required: [uploadId, versionNo, status]
+      properties:
+        uploadId: { type: string, format: uuid }
+        versionNo: { type: integer }
+        status: { type: string, enum: [processing, succeeded, failed] }
+    VersionDiff:
+      type: object
+      properties:
+        addedCount: { type: integer }
+        removedCount: { type: integer }
+        changedCount: { type: integer }
+        mappingChangedCount: { type: integer }
+    SampleSearchResponse:
+      type: object
+      properties:
+        exactMatch:
+          $ref: '#/components/schemas/Sample'
+        suggestions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Sample'
+    Sample:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        labelN: { type: string }
+        lifecycleStatus: { type: string }
+        expiryAt: { type: string, format: date-time }
+        location:
+          type: object
+          properties:
+            cabinetNo: { type: integer }
+            gridRow: { type: integer }
+            gridCol: { type: integer }
+            boxId: { type: string }
+    RackMapping:
+      type: object
+      properties:
+        boxId: { type: string }
+        labelN: { type: string }
+        rackCode: { type: string }
+    CabinetVisualization:
+      type: object
+      properties:
+        cabinets:
+          type: array
+          items:
+            type: object
+            properties:
+              cabinetNo: { type: integer }
+              slots:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    row: { type: integer }
+                    col: { type: integer }
+                    status: { type: string }
+                    labelN: { type: string }
+                    boxId: { type: string }
+    DisposalAlert:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        labelN: { type: string }
+        expiryAt: { type: string, format: date-time }
+        status: { type: string, enum: [pending, reviewed, completed] }
+    Event:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        eventType: { type: string }
+        eventTime: { type: string, format: date-time }
+        actorEmail: { type: string }
+        payload: { type: object, additionalProperties: true }
+    ChatbotResponse:
+      type: object
+      properties:
+        answer: { type: string }
+        sources:
+          type: array
+          items:
+            type: string
+        confidence:
+          type: number
+          format: float
