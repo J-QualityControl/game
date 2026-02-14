@@ -34,3 +34,10 @@
 - Validation iteration count: 1
 - No unresolved quality issues.
 - Spec is ready for `/speckit.plan`.
+
+## Quality Gate Results (2026-02-14)
+
+- npm run lint: FAIL (exit 1)
+- npm run typecheck: FAIL (exit 1)
+- npm run test: FAIL (exit 1)
+- npm run test:e2e: FAIL (exit 1)

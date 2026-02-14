@@ -55,3 +55,9 @@ Minimum test set:
 - Happy-path upload/search/mapping/disposal flows
 - Edge cases for invalid BOX-ID/LABEL-N parse and duplicate active mappings
 - Regression test for ingestion conflict handling
+
+
+## Quickstart Validation Notes
+
+- Steps rechecked during /speckit.implement scaffold pass (2026-02-14).
+
