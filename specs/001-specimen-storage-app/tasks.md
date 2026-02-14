@@ -95,9 +95,9 @@
 
 ---
 
-## Phase 5: User Story 3 - Visualize 7 Cabinets and 5x7 Slots (Priority: P2)
+## Phase 5: User Story 3 - Visualize 7 Cabinets and 5x7 Slots (5 columns x 7 rows) (Priority: P2)
 
-**Goal**: Render 7-cabinet 5x7 occupancy visualization with slot drill-down.
+**Goal**: Render 7-cabinet occupancy visualization with 5 columns x 7 rows per cabinet and slot drill-down.
 
 **Independent Test**: Open visualization and confirm all cabinet/slot positions and occupancy details render correctly.
 
@@ -252,3 +252,4 @@ Task: "T021 [US1] rack upload route in src/app/api/uploads/rack/route.ts"
 - All tasks follow required checklist format with IDs, optional [P], and [US#] labels for story phases.
 - Every implementation task includes explicit file paths.
 - Suggested MVP scope: Phase 3 (US1) after Foundational completion.
+

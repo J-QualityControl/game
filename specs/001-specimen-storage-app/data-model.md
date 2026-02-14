@@ -84,8 +84,8 @@ Fields:
 
 Constraints and indexes:
 - CHECK `cabinet_no BETWEEN 1 AND 7`
-- CHECK `grid_row BETWEEN 1 AND 5`
-- CHECK `grid_col BETWEEN 1 AND 7`
+- CHECK `grid_row BETWEEN 1 AND 7`
+- CHECK `grid_col BETWEEN 1 AND 5`
 - UNIQUE (`sample_id`) WHERE `effective_to_upload_id IS NULL`
 - UNIQUE (`sample_box_id`) WHERE `effective_to_upload_id IS NULL`
 - UNIQUE (`cabinet_no`, `grid_row`, `grid_col`) WHERE `effective_to_upload_id IS NULL`
@@ -144,3 +144,4 @@ For upload N vs N-1:
 - Removed samples: label exists in N-1 only
 - Changed samples: same label, field/value differences
 - Mapping changes: sample/box/slot tuple differs
+

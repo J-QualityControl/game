@@ -41,7 +41,7 @@ As a lab operator, I search by specimen label first and immediately see current 
 
 ### User Story 3 - Visualize 7 Cabinets and 5x7 Slots (Priority: P2)
 
-As a storage coordinator, I inspect cabinet occupancy on a 2D layout of 7 cabinets, each with a 5x7 grid, to locate available and occupied areas quickly.
+As a storage coordinator, I inspect cabinet occupancy on a 2D layout of 7 cabinets, each with a 5-column by 7-row grid (col 1..5, row 1..7), to locate available and occupied areas quickly.
 
 **Why this priority**: Visualization improves planning and reduces placement mistakes after core search/upload functionality exists.
 
@@ -123,7 +123,7 @@ As a specimen manager, I receive disposal alerts for due specimens and use a bas
 
 - **Specimen**: Unique stored item tracked by LABEL-N, lifecycle state, and linked location/mapping references.
 - **MasterListVersion**: Snapshot metadata for each accepted upload including source file, timestamp, submitter, and diff summary.
-- **StoragePosition**: Cabinet/rack/grid/slot representation for current specimen placement in the 7-cabinet 5x7 model.
+- **StoragePosition**: Cabinet/rack/grid/slot representation for current specimen placement in the 7-cabinet model (5 columns x 7 rows).
 - **RackMapping**: Relationship record between BOX-ID and LABEL-N with status and history.
 - **DisposalAlert**: Due-for-disposal notification with reason, due date, owner, and action status.
 - **HistoryEvent**: Auditable event record for uploads, mapping edits, status changes, and other tracked operations.
@@ -150,3 +150,4 @@ As a specimen manager, I receive disposal alerts for due specimens and use a bas
 - **SC-004**: 100% of due-for-disposal specimens appear in the alert list before their disposal deadline window starts.
 - **SC-005**: At least 90% of pilot users can complete core tasks (upload, search, location check, mapping review) without assistance.
 - **SC-006**: For supported chatbot intents, at least 90% of responses are rated useful by internal users during pilot evaluation.
+

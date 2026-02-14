@@ -112,7 +112,7 @@ paths:
                   $ref: '#/components/schemas/Event'
   /cabinets/visualization:
     get:
-      summary: Get 7-cabinet 5x7 occupancy view
+      summary: Get 7-cabinet occupancy view (5 columns x 7 rows)
       operationId: getCabinetVisualization
       responses:
         '200':
@@ -279,8 +279,8 @@ components:
                 items:
                   type: object
                   properties:
-                    row: { type: integer }
-                    col: { type: integer }
+                    row: { type: integer, minimum: 1, maximum: 7 }
+                    col: { type: integer, minimum: 1, maximum: 5 }
                     status: { type: string }
                     labelN: { type: string }
                     boxId: { type: string }
@@ -310,3 +310,4 @@ components:
         confidence:
           type: number
           format: float
+
