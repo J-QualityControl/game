@@ -1,50 +1,95 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+﻿<!--
+Sync Impact Report
+- Version change: N/A -> 1.0.0
+- Modified principles:
+  - Introduced I. Repository Structure Is Contract
+  - Introduced II. Reproducible Tooling And Commands
+  - Introduced III. Test-Backed Delivery
+  - Introduced IV. Consistent Python Style And Simplicity
+  - Introduced V. Security And Configuration Hygiene
+- Added sections:
+  - Operational Constraints
+  - Delivery Workflow And Quality Gates
+- Removed sections:
+  - None
+- Templates requiring updates:
+  - Updated: .specify/templates/plan-template.md
+  - Updated: .specify/templates/spec-template.md
+  - Updated: .specify/templates/tasks-template.md
+  - Pending (path not present): .specify/templates/commands/*.md
+- Follow-up TODOs:
+  - None
+-->
+
+# daewoong_stock Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Repository Structure Is Contract
+All contributions MUST use the repository structure defined in `AGENTS.md`:
+`src/`, `tests/`, `scripts/`, `docs/`, and `assets/`. New modules MUST be
+organized by feature or domain, and test paths MUST mirror source paths.
+Rationale: predictable layout reduces onboarding time and review friction.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Reproducible Tooling And Commands
+Projects MUST provide explicit, repeatable setup and execution commands.
+Python environments MUST be created with `python -m venv .venv`, dependencies
+MUST be installed from pinned requirement files when available, and new tooling
+MUST add exact commands to `AGENTS.md`.
+Rationale: deterministic developer and CI behavior is required for reliable
+handoffs.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Test-Backed Delivery
+Every feature and bug fix MUST include automated tests in `tests/`.
+At minimum, each feature MUST include one happy-path test and one relevant
+edge-case test. Every bug fix MUST include a regression test that fails before
+and passes after the fix.
+Rationale: functionality is not complete until behavior is verified.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Consistent Python Style And Simplicity
+Code MUST follow 4-space indentation, UTF-8 files, and Python naming
+conventions (`snake_case`, `PascalCase`, `UPPER_SNAKE_CASE`). Functions and
+modules MUST stay single-purpose with explicit side effects.
+Rationale: consistency improves maintainability and makes defects easier to
+isolate.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Security And Configuration Hygiene
+Secrets, tokens, and local `.env` files MUST NOT be committed.
+Required environment variables MUST be documented in `.env.example`.
+Dependencies SHOULD be version-pinned whenever practical.
+Rationale: safe defaults prevent credential leaks and reduce supply-chain drift.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Operational Constraints
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+- Target baseline assumes Python-focused workflows unless a spec explicitly
+  states otherwise.
+- Linting and formatting gates are mandatory for deliverables:
+  `ruff check .` and `ruff format .`.
+- Any intentional deviation from this constitution MUST be documented in the
+  plan's complexity/exceptions section with rationale and reviewer sign-off.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+## Delivery Workflow And Quality Gates
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+- Specifications MUST define independently testable user stories and measurable
+  success criteria before implementation.
+- Implementation plans MUST include a constitution check before research/design
+  and again before delivery.
+- Pull requests MUST include: concise change summary, why it changed, testing
+  evidence (command + result), and linked issue/task ID when available.
+- User-visible behavior changes MUST include screenshots or sample output.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution supersedes conflicting project process documents.
+Amendments require (1) a written proposal, (2) approval by repository
+maintainers, and (3) updates to dependent templates/docs in the same change.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+Versioning policy for this constitution follows semantic versioning:
+- MAJOR: backward-incompatible principle removals or redefinitions.
+- MINOR: new principle/section or materially expanded guidance.
+- PATCH: clarifications and non-semantic wording improvements.
+
+Compliance review is mandatory in plan and PR review flows. Reviewers MUST
+verify structure, tests, lint/format gates, and security/configuration hygiene.
+
+**Version**: 1.0.0 | **Ratified**: 2026-02-14 | **Last Amended**: 2026-02-14
